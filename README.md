@@ -8,11 +8,11 @@ This is a `Dockerfile` that will compile and package the Monetaryunit (MUE) wall
 1. Wait for iiiiiit ...
 1. `docker run -it mue-debian9:1.0.3.2-1 /bin/bash` and copy the container ID (e.g. `12345689abc`)
 1. in a different terminal, copy the `.deb` files out of the container: 
-  1. `docker cp 12345689abc:/mue/monetaryunit-wallet-1.0.3.2-1-amd64.deb .`
-  1. `docker cp 12345689abc:/mue/monetaryunit-wallet-1.0.3.2-1-qt5-amd64.deb .`
+    1. `docker cp 12345689abc:/mue/monetaryunit-wallet-1.0.3.2-1-amd64.deb .`
+    1. `docker cp 12345689abc:/mue/monetaryunit-wallet-1.0.3.2-1-qt5-amd64.deb .`
 1. install the package(s): 
-  1. `dpkg -i monetaryunit-wallet-1.0.3.2-1-amd64.deb`
-  1. `dpkg -i monetaryunit-wallet-1.0.3.2-1-qt5-amd64.deb`
+    1. `dpkg -i monetaryunit-wallet-1.0.3.2-1-amd64.deb`
+    1. `dpkg -i monetaryunit-wallet-1.0.3.2-1-qt5-amd64.deb`
 
 # Todo
 1. find a better way to get the `.deb`s out of the container
