@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM ubuntu:17.04
 
 ENV TOP_DIR "/monetaryunit"
 ENV BDB_SRCDIR "$TOP_DIR/bdb/src"
@@ -71,5 +71,5 @@ RUN cd $MUE_SRCDIR && \
     mv /tmp/mue_cli_control $MUE_CLI_TGTDIR/DEBIAN/control && \
     mv /tmp/mue_qt5_control $MUE_GUI_TGTDIR/DEBIAN/control && \
     cd $TOP_DIR && \
-    dpkg-deb --build $MUE_CLI_TGTDIR monetaryunit-wallet-$MUE_VERSION-amd64.deb && \
-    dpkg-deb --build $MUE_GUI_TGTDIR monetaryunit-wallet-qt5-$MUE_VERSION-amd64.deb
+    dpkg-deb --build $MUE_CLI_TGTDIR monetaryunit-wallet-$MUE_VERSION-ubuntu_zesty-amd64.deb && \
+    dpkg-deb --build $MUE_GUI_TGTDIR monetaryunit-wallet-qt5-$MUE_VERSION-ubuntu_zesty-amd64.deb

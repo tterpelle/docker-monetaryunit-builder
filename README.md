@@ -16,3 +16,4 @@ This is a `Dockerfile` that will compile and package the Monetaryunit (MUE) wall
 
 # Todo
 1. find a better way to get the `.deb`s out of the container
+1. add support for building for other distributions, starting with deb derivatives likes Ubuntu
