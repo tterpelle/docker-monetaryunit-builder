@@ -1,5 +1,7 @@
 FROM archlinux/base
 
+ARG NUMCPU=-1
+
 ENV DISTRO "arch"
 
 ENV TOP_DIR "/monetaryunit"
@@ -33,7 +35,8 @@ RUN pacman -Syu --noconfirm && \
     useradd -s /bin/bash -d $DISTRO_DIR -m build && \
     echo 'build ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     # Enable ALL CPUs for compiling
-    sed -i -e "s;#MAKEFLAGS=.*;MAKEFLAGS=-j$(lscpu | grep '^CPU(s):' | awk '{ print $2 }');" /etc/makepkg.conf && \
+    if [ $NUMCPU -lt 1 ]; then NUMCPU=$(lscpu | grep '^CPU(s):' | awk '{ print $2 }'); fi && \
+    sed -i -e "s;#MAKEFLAGS=.*;MAKEFLAGS=-j$NUMCPU;" /etc/makepkg.conf && \
     # Set path for built packages
     sed -i -e "s;#PKGDEST=.*;PKGDEST=$TOP_DIR/$DISTRO;" /etc/makepkg.conf
 
@@ -61,3 +64,7 @@ RUN su -c "yaourt -Sy --noconfirm db4.8" - build
 ## build the packages from PKGBUILD
 RUN su -c "cd $MUE_SRCDIR && \
           makepkg -si --noconfirm" - build
+
+COPY copy_packages.sh /
+
+ENTRYPOINT [ "/copy_packages.sh", "arch", "pkg.tar.xz" ]
