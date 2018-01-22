@@ -83,4 +83,4 @@ RUN mv /tmp/mue_cli_control $MUE_CLI_TGTDIR/DEBIAN/control && \
 
 COPY copy_packages.sh /
 
-ENTRYPOINT [ "/copy_packages.sh", "ubuntu1604", "deb" ]
+ENTRYPOINT [ "/copy_packages.sh" ]
