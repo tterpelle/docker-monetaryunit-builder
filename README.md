@@ -10,7 +10,7 @@ This example contains the steps to build Debian Stretch (v9) packages.
 1. Wait for iiiiiit ... this entire build takes around 15 minutes on my Intel i5-6300U with all cores used.
 1. `docker volume create --name monetaryunit_packages`
 1. `docker run -v monetaryunit_packages:/packages mue-debian9:1.0.3.2-1`
-1. the packaged binaries are in `/var/lib/docker/volumes/mue-debian9/_data/debian9`
+1. the packaged binaries are in `/var/lib/docker/volumes/monetaryunit_packages/_data/debian9`
 1. install the package(s) on your host:
     1. `dpkg -i /var/lib/docker/volumes/mue-debian9/_data/debian9/monetaryunit-wallet-1.0.3.2-1-debian_stretch-amd64.deb`
     1. `dpkg -i /var/lib/docker/volumes/mue-debian9/_data/debian9/monetaryunit-wallet-qt5-1.0.3.2-1-debian_stretch-amd64.deb`
