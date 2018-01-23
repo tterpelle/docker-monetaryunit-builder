@@ -43,7 +43,7 @@ echo "%SHA256SUM0 %SOURCE0" | sha256sum -c -
 %build
 ./autogen.sh
 ./configure --prefix=/usr --with-gui=qt5
-make
+%make_build
 
 %install
 %make_install

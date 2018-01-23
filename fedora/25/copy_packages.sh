@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DISTRO="$1"
-PKGEXT="$2"
+DISTRO="fedora25"
+PKGEXT="rpm"
 
 mkdir -p /packages/${DISTRO} && echo "created /packages/${DISTRO}" || echo "failed to create created /packages/${DISTRO}"
 
