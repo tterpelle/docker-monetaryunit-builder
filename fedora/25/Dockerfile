@@ -7,7 +7,7 @@ ENV DISTRO_DIR "$TOP_DIR/$DISTRO"
 
 # update dnf, install EPEL repo and the packages required to build the wallet
 RUN dnf -y update && \
-    dnf -y upgrade && \ 
+    dnf -y upgrade && \
     dnf -y install autoconf \
 										automake \
 										binutils \
@@ -41,7 +41,7 @@ RUN mkdir $TOP_DIR && \
     groupadd -g 1000 build && \
     useradd -g build -m -d $DISTRO_DIR -s /bin/bash -c "Build user" build && \
     su -c 'rpmdev-setuptree' - build && \
-    echo "%__make     /usr/bin/make -j4" >> /etc/rpm/macros && \
+    echo "%__make     /usr/bin/make -j" >> /etc/rpm/macros && \
     cat /etc/rpm/macros
 
 # copy the spec file to the Docker image
