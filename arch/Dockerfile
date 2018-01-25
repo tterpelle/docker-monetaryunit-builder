@@ -1,18 +1,9 @@
 FROM archlinux/base
 
-ARG NUMCPU=-1
-
 ENV DISTRO "arch"
 
 ENV TOP_DIR "/monetaryunit"
 ENV DISTRO_DIR "$TOP_DIR/$DISTRO"
-ENV BDB_SRCDIR "$DISTRO_DIR/bdb/src"
-ENV BDB_TGTDIR "$DISTRO_DIR/bdb/build"
-ENV BDB_VERSION "4.8.30"
-ENV BDB_URL "http://download.oracle.com/berkeley-db/db-$BDB_VERSION.tar.gz"
-ENV MUE_SRCDIR "$DISTRO_DIR/mue/src"
-ENV MUE_CLI_TGTDIR "$DISTRO_DIR/mue/build"
-ENV MUE_GUI_TGTDIR "$DISTRO_DIR/mue/build-gui"
 ENV MUE_URL "https://github.com/muecoin/MUECore.git"
 ENV MUE_VERSION "1.0.3.2"
 
@@ -30,15 +21,21 @@ RUN pacman -Syu --noconfirm && \
                     qt5-tools \
                     tar \
                     wget \
-                    zeromq && \
-    mkdir -p $TOP_DIR && \
-    useradd -s /bin/bash -d $DISTRO_DIR -m build && \
+                    zeromq
+
+# create build user and set up the package build environment
+RUN mkdir $TOP_DIR && \
+    groupadd -g 1000 build && \
+    useradd -g build -m -d $DISTRO_DIR -s /bin/bash -c "Build user" build && \
     echo 'build ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
-    # Enable ALL CPUs for compiling
-    if [ $NUMCPU -lt 1 ]; then NUMCPU=$(lscpu | grep '^CPU(s):' | awk '{ print $2 }'); fi && \
-    sed -i -e "s;#MAKEFLAGS=.*;MAKEFLAGS=-j$NUMCPU;" /etc/makepkg.conf && \
+    # run one job less than the number of available CPUs concurrently
+    BUILDJOBS="$(($(nproc)-1))" && \
+    if [ "${BUILDJOBS}" -lt 1 ]; then BUILDJOBS=1; fi && \
+    sed -i -e "s;#MAKEFLAGS=.*;MAKEFLAGS=\"-j${BUILDJOBS}\";" /etc/makepkg.conf && \
     # Set path for built packages
-    sed -i -e "s;#PKGDEST=.*;PKGDEST=$TOP_DIR/$DISTRO;" /etc/makepkg.conf
+    sed -i -e "s;#PKGDEST=.*;PKGDEST=$TOP_DIR/$DISTRO;" /etc/makepkg.conf && \
+    mkdir $DISTRO_DIR/pkgbuilds && \
+    chown -R build:build $DISTRO_DIR
 
 ## Install Yaourt
 RUN su -c "git clone https://aur.archlinux.org/package-query.git && \
@@ -48,21 +45,17 @@ RUN su -c "git clone https://aur.archlinux.org/package-query.git && \
           git clone https://aur.archlinux.org/yaourt.git && \
           cd yaourt && \
           makepkg -si --noconfirm && \
-          cd .." - build
-#
-## create all the dirs
-RUN for i in $BDB_SRCDIR $BDB_TGTDIR $MUE_SRCDIR $MUE_CLI_TGTDIR $MUE_GUI_TGTDIR $MUE_GUI_TGTDIR/usr/bin; do mkdir -p ${i}; done && \
-    chown -R build:build $DISTRO_DIR && \
+          cd .." - build && \
 # Set path for built packages
     sed -i -e "s;#EXPORT=0\(.*\);EXPORT=1\1;" /etc/yaourtrc
 
-COPY PKGBUILD $MUE_SRCDIR
+COPY PKGBUILD $DISTRO_DIR/pkgbuilds
 
-## build libdb-dev v4.8 from source and install it
+# build libdb-dev v4.8 from source and install it
 RUN su -c "yaourt -Sy --noconfirm db4.8" - build
 
-## build the packages from PKGBUILD
-RUN su -c "cd $MUE_SRCDIR && \
+# build the packages from PKGBUILD
+RUN su -c "cd $DISTRO_DIR/pkgbuilds && \
           makepkg -si --noconfirm" - build
 
 COPY copy_packages.sh /

@@ -41,7 +41,10 @@ RUN mkdir $TOP_DIR && \
     groupadd -g 1000 build && \
     useradd -g build -m -d $DISTRO_DIR -s /bin/bash -c "Build user" build && \
     su -c 'rpmdev-setuptree' - build && \
-    echo "%__make     /usr/bin/make -j" >> /etc/rpm/macros
+    # run one job less than the number of available CPUs concurrently
+    BUILDJOBS="$(($(nproc)-1))" && \
+    if [ "${BUILDJOBS}" -lt 1 ]; then BUILDJOBS=1; fi && \
+    echo "%__make     /usr/bin/make -j${BUILDJOBS}" >> /etc/rpm/macros
 
 # copy the spec file to the Docker image
 COPY monetaryunit-wallet.spec $DISTRO_DIR/rpmbuild/SPECS/

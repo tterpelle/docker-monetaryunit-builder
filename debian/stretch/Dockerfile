@@ -1,7 +1,5 @@
 FROM debian:stretch
 
-ARG NUMCPU=-1
-
 ENV DISTRO "debian9"
 ENV DISTROCODE "debian_stretch"
 
@@ -56,8 +54,9 @@ RUN wget -qO $BDB_SRCDIR/db.tar.gz $BDB_URL && \
     cd $BDB_SRCDIR/db-$BDB_VERSION/build_unix && \
     mkdir -p $BDB_TGTDIR && \
     ../dist/configure --disable-shared --enable-cxx --with-pic --prefix=$BDB_TGTDIR && \
-    if [ $NUMCPU -lt 1 ]; then NUMCPU=$(lscpu | grep '^CPU(s):' | awk '{ print $2 }'); fi && \
-    make -j$NUMCPU && \
+    BUILDJOBS="$(($(nproc)-1))" && \
+    if [ "${BUILDJOBS}" -lt 1 ]; then BUILDJOBS=1; fi && \
+    make -j${BUILDJOBS} && \
     make install
 
 # clone the git repo
@@ -67,8 +66,9 @@ RUN git clone $MUE_URL $MUE_SRCDIR
 RUN cd $MUE_SRCDIR && \
     sh ./autogen.sh && \
     ./configure --prefix=/usr --with-gui=qt5 CPPFLAGS="-I$BDB_TGTDIR/include -O2" LDFLAGS="-L$BDB_TGTDIR/lib" && \
-    if [ $NUMCPU -lt 1 ]; then NUMCPU=$(lscpu | grep '^CPU(s):' | awk '{ print $2 }'); fi && \
-    make -j$NUMCPU && \
+    BUILDJOBS="$(($(nproc)-1))" && \
+    if [ "${BUILDJOBS}" -lt 1 ]; then BUILDJOBS=1; fi && \
+    make -j${BUILDJOBS} && \
     make DESTDIR=$MUE_CLI_TGTDIR install && \
     strip $MUE_CLI_TGTDIR/usr/bin/* && \
     # move gui files to separate dir
@@ -78,8 +78,8 @@ RUN cd $MUE_SRCDIR && \
 RUN mv /tmp/mue_cli_control $MUE_CLI_TGTDIR/DEBIAN/control && \
     mv /tmp/mue_qt5_control $MUE_GUI_TGTDIR/DEBIAN/control && \
     cd $DISTRO_DIR && \
-    dpkg-deb --build $MUE_CLI_TGTDIR monetaryunit-wallet-$MUE_VERSION-$DISTROCODE-amd64.deb && \
-    dpkg-deb --build $MUE_GUI_TGTDIR monetaryunit-wallet-qt5-$MUE_VERSION-$DISTROCODE-amd64.deb
+    dpkg-deb --build $MUE_CLI_TGTDIR monetaryunit-wallet_$MUE_VERSION_amd64.deb && \
+    dpkg-deb --build $MUE_GUI_TGTDIR monetaryunit-wallet-qt5_$MUE_VERSION_amd64.deb
 
 COPY copy_packages.sh /
 

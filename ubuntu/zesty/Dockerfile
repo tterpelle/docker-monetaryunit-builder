@@ -1,7 +1,5 @@
 FROM ubuntu:17.04
 
-ARG NUMCPU=-1
-
 ENV DISTRO "ubuntu1704"
 ENV DISTROCODE "ubuntu_zesty"
 
@@ -56,8 +54,9 @@ RUN wget -qO $BDB_SRCDIR/db.tar.gz $BDB_URL && \
     cd $BDB_SRCDIR/db-$BDB_VERSION/build_unix && \
     mkdir -p $BDB_TGTDIR && \
     ../dist/configure --disable-shared --enable-cxx --with-pic --prefix=$BDB_TGTDIR && \
-    if [ $NUMCPU -lt 1 ]; then NUMCPU=$(lscpu | grep '^CPU(s):' | awk '{ print $2 }'); fi && \
-    make -j$NUMCPU && \
+    BUILDJOBS="$(($(nproc)-1))" && \
+    if [ "${BUILDJOBS}" -lt 1 ]; then BUILDJOBS=1; fi && \
+    make -j${BUILDJOBS} && \
     make install
 
 # clone the git repo
@@ -67,8 +66,9 @@ RUN git clone $MUE_URL $MUE_SRCDIR
 RUN cd $MUE_SRCDIR && \
     sh ./autogen.sh && \
     ./configure --prefix=/usr --with-gui=qt5 CPPFLAGS="-I$BDB_TGTDIR/include -O2" LDFLAGS="-L$BDB_TGTDIR/lib" && \
-    if [ $NUMCPU -lt 1 ]; then NUMCPU=$(lscpu | grep '^CPU(s):' | awk '{ print $2 }'); fi && \
-    make -j$NUMCPU && \
+    BUILDJOBS="$(($(nproc)-1))" && \
+    if [ "${BUILDJOBS}" -lt 1 ]; then BUILDJOBS=1; fi && \
+    make -j${BUILDJOBS} && \
     make DESTDIR=$MUE_CLI_TGTDIR install && \
     strip $MUE_CLI_TGTDIR/usr/bin/* && \
     # move gui files to separate dir
