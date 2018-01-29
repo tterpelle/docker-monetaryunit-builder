@@ -78,8 +78,8 @@ RUN cd $MUE_SRCDIR && \
 RUN mv /tmp/mue_cli_control $MUE_CLI_TGTDIR/DEBIAN/control && \
     mv /tmp/mue_qt5_control $MUE_GUI_TGTDIR/DEBIAN/control && \
     cd $DISTRO_DIR && \
-    dpkg-deb --build $MUE_CLI_TGTDIR monetaryunit-wallet_$MUE_VERSION_amd64.deb && \
-    dpkg-deb --build $MUE_GUI_TGTDIR monetaryunit-wallet-qt5_$MUE_VERSION_amd64.deb
+    dpkg-deb --build $MUE_CLI_TGTDIR monetaryunit-wallet_${MUE_VERSION}_amd64.deb && \
+    dpkg-deb --build $MUE_GUI_TGTDIR monetaryunit-wallet-qt5_${MUE_VERSION}_amd64.deb
 
 COPY copy_packages.sh /
 
