@@ -30,6 +30,13 @@ do
   cd -
 done
 ```
+# Installation notes
+
+## CentOS / Red Hat Enterprise Linux 7
+Make sure you install the `epel-release` package first. After that you can install the MUE wallet with
+```
+yum localinstall monetaryunit-wallet*.rpm
+```
 
 # Donations
 My MUE address is 7obzc8c7GYfNuFotKNBoKtricCwP25XEk6. Feel free to send some over, or not, it's entirely up to you!
