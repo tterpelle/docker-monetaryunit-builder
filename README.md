@@ -16,20 +16,8 @@ This example contains the steps to build Debian Stretch (v9) packages.
     1. `apt -f install` in case you're missing dependencies
 
 # Build all packages in one go
-```
-git clone https://github.com/tterpelle/docker-monetaryunit-builder &&
-cd docker-monetaryunit-builder &&
-docker volume create --name monetaryunit_packages &&
-for i in $(find -name 'Dockerfile')
-do
-  _DIRNAME=$(dirname ${i})
-  _DISTRO=$(grep " DISTRO " ${i} | cut -f2 -d\")
-  cd ${_DIRNAME}
-  docker build -t mue:${_DISTRO} . &&
-  docker run -v monetaryunit_packages:/packages mue:${_DISTRO}
-  cd -
-done
-```
+Run the `build_all.sh` script. This will take quite some time to finish!
+
 # Installation notes
 
 ## ArchLinux
