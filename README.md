@@ -8,7 +8,7 @@ This example contains the steps to build Debian Stretch (v9) packages.
 1. `cd docker-monetaryunit-builder/debian/stretch`
 1. `docker build -t mue:debian9 .`
 1. Wait for iiiiiit ... this entire build takes around 15 minutes on my Intel i5-6300U with all cores used.
-1. `docker volume create --name monetaryunit_packages`
+1. `docker volume create --name monetaryunit_packages` (only needed once)
 1. `docker run -v monetaryunit_packages:/packages mue:debian9`
 1. the packaged binaries are in `/var/lib/docker/volumes/monetaryunit_packages/_data/debian9`
 1. install the package(s) on your host:
@@ -32,10 +32,22 @@ done
 ```
 # Installation notes
 
+## ArchLinux
+The build fails with `boost-1.66` and `boost-libs-1.66` packages. If you revert to version 1.65 it works fine. I've created [a bug report](https://github.com/muecoin/MUECore/issues/3).
+
 ## CentOS / Red Hat Enterprise Linux 7
 Make sure you install the `epel-release` package first. After that you can install the MUE wallet with
 ```
-yum localinstall monetaryunit-wallet*.rpm
+yum localinstall monetaryunit-wallet-1.0.3.2-1.x86_64.rpm monetaryunit-wallet-qt5-1.0.3.2-1.x86_64.rpm
+```
+## Debian 9
+```
+dpkg -i monetaryunit-wallet_1.0.3.2_amd64.deb monetaryunit-wallet-qt5_1.0.3.2_amd64.deb
+apt -f install
+```
+## Fedora 25 / 26 / 27
+```
+dnf install monetaryunit-wallet-1.0.3.2-1.x86_64.rpm monetaryunit-wallet-qt5-1.0.3.2-1.x86_64.rpm
 ```
 
 # Donations
