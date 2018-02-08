@@ -37,7 +37,7 @@ RUN mkdir $TOP_DIR && \
     mkdir $DISTRO_DIR/pkgbuilds && \
     chown -R build:build $DISTRO_DIR
 
-## Install Yaourt
+# Install Yaourt
 RUN su -c "git clone https://aur.archlinux.org/package-query.git && \
           cd package-query && \
           makepkg -si --noconfirm && \
