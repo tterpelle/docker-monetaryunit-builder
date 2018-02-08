@@ -44,7 +44,7 @@ RUN mkdir $TOP_DIR && \
     # run one job less than the number of available CPUs concurrently
     BUILDJOBS="$(($(nproc)-1))" && \
     if [ "${BUILDJOBS}" -lt 1 ]; then BUILDJOBS=1; fi && \
-    echo "%__make     /usr/bin/make -j${BUILDJOBS}" >> /etc/rpm/macros && \
+    echo "%__make     /usr/bin/make -j${BUILDJOBS}" >> /etc/rpm/macros
 
 # copy the spec file to the Docker image
 COPY monetaryunit-wallet.spec $DISTRO_DIR/rpmbuild/SPECS/
