@@ -12,8 +12,8 @@ ENV BDB_URL "http://download.oracle.com/berkeley-db/db-$BDB_VERSION.tar.gz"
 ENV MUE_SRCDIR "$DISTRO_DIR/mue/src"
 ENV MUE_CLI_TGTDIR "$DISTRO_DIR/mue/build"
 ENV MUE_GUI_TGTDIR "$DISTRO_DIR/mue/build-gui"
-ENV MUE_URL "https://github.com/muecoin/MUECore.git"
-ENV MUE_VERSION "1.0.3.2"
+ENV MUE_URL "https://github.com/muecoin/MUE.git"
+ENV MUE_VERSION "2.0.2"
 
 COPY mue_cli_control /tmp
 COPY mue_qt5_control /tmp
