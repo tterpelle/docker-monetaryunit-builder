@@ -22,6 +22,7 @@ COPY mue_qt5_control /tmp
 RUN apt -q update && \
 # install dependencies
     apt -qy install autoconf \
+                    automake \
                    	bsdmainutils \
                     build-essential \
                     gawk \
