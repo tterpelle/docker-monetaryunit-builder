@@ -1,0 +1,154 @@
+diff --git a/build-aux/m4/ax_boost_date_time.m4 b/build-aux/m4/ax_boost_date_time.m4
+new file mode 100644
+index 000000000..b88c3ec7e
+--- /dev/null
++++ b/build-aux/m4/ax_boost_date_time.m4
+@@ -0,0 +1,113 @@
++# ===========================================================================
++#    https://www.gnu.org/software/autoconf-archive/ax_boost_date_time.html
++# ===========================================================================
++#
++# SYNOPSIS
++#
++#   AX_BOOST_DATE_TIME
++#
++# DESCRIPTION
++#
++#   Test for Date_Time library from the Boost C++ libraries. The macro
++#   requires a preceding call to AX_BOOST_BASE. Further documentation is
++#   available at <http://randspringer.de/boost/index.html>.
++#
++#   This macro calls:
++#
++#     AC_SUBST(BOOST_DATE_TIME_LIB)
++#
++#   And sets:
++#
++#     HAVE_BOOST_DATE_TIME
++#
++# LICENSE
++#
++#   Copyright (c) 2008 Thomas Porschberg <thomas@randspringer.de>
++#   Copyright (c) 2008 Michael Tindal
++#
++#   Copying and distribution of this file, with or without modification, are
++#   permitted in any medium without royalty provided the copyright notice
++#   and this notice are preserved. This file is offered as-is, without any
++#   warranty.
++
++#serial 22
++
++AC_DEFUN([AX_BOOST_DATE_TIME],
++[
++	AC_ARG_WITH([boost-date-time],
++	AS_HELP_STRING([--with-boost-date-time@<:@=special-lib@:>@],
++                   [use the Date_Time library from boost - it is possible to specify a certain library for the linker
++                        e.g. --with-boost-date-time=boost_date_time-gcc-mt-d-1_33_1 ]),
++        [
++        if test "$withval" = "no"; then
++			want_boost="no"
++        elif test "$withval" = "yes"; then
++            want_boost="yes"
++            ax_boost_user_date_time_lib=""
++        else
++		    want_boost="yes"
++		ax_boost_user_date_time_lib="$withval"
++		fi
++        ],
++        [want_boost="yes"]
++	)
++
++	if test "x$want_boost" = "xyes"; then
++        AC_REQUIRE([AC_PROG_CC])
++		CPPFLAGS_SAVED="$CPPFLAGS"
++		CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
++		export CPPFLAGS
++
++		LDFLAGS_SAVED="$LDFLAGS"
++		LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
++		export LDFLAGS
++
++        AC_CACHE_CHECK(whether the Boost::Date_Time library is available,
++					   ax_cv_boost_date_time,
++        [AC_LANG_PUSH([C++])
++		 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[@%:@include <boost/date_time/gregorian/gregorian_types.hpp>]],
++                                   [[using namespace boost::gregorian; date d(2002,Jan,10);
++                                     return 0;
++                                   ]])],
++         ax_cv_boost_date_time=yes, ax_cv_boost_date_time=no)
++         AC_LANG_POP([C++])
++		])
++		if test "x$ax_cv_boost_date_time" = "xyes"; then
++			AC_DEFINE(HAVE_BOOST_DATE_TIME,,[define if the Boost::Date_Time library is available])
++            BOOSTLIBDIR=`echo $BOOST_LDFLAGS | sed -e 's/@<:@^\/@:>@*//'`
++            if test "x$ax_boost_user_date_time_lib" = "x"; then
++                for libextension in `ls $BOOSTLIBDIR/libboost_date_time*.so* $BOOSTLIBDIR/libboost_date_time*.dylib* $BOOSTLIBDIR/libboost_date_time*.a* 2>/dev/null | sed 's,.*/,,' | sed -e 's;^lib\(boost_date_time.*\)\.so.*$;\1;' -e 's;^lib\(boost_date_time.*\)\.dylib.*$;\1;' -e 's;^lib\(boost_date_time.*\)\.a*$;\1;'` ; do
++                     ax_lib=${libextension}
++				    AC_CHECK_LIB($ax_lib, exit,
++                                 [BOOST_DATE_TIME_LIB="-l$ax_lib"; AC_SUBST(BOOST_DATE_TIME_LIB) link_date_time="yes"; break],
++                                 [link_date_time="no"])
++				done
++                if test "x$link_date_time" != "xyes"; then
++                for libextension in `ls $BOOSTLIBDIR/boost_date_time*.dll* $BOOSTLIBDIR/boost_date_time*.a* 2>/dev/null | sed 's,.*/,,' | sed -e 's;^\(boost_date_time.*\)\.dll.*$;\1;' -e 's;^\(boost_date_time.*\)\.a.*$;\1;'` ; do
++                     ax_lib=${libextension}
++				    AC_CHECK_LIB($ax_lib, exit,
++                                 [BOOST_DATE_TIME_LIB="-l$ax_lib"; AC_SUBST(BOOST_DATE_TIME_LIB) link_date_time="yes"; break],
++                                 [link_date_time="no"])
++				done
++                fi
++
++            else
++               for ax_lib in $ax_boost_user_date_time_lib boost_date_time-$ax_boost_user_date_time_lib; do
++				      AC_CHECK_LIB($ax_lib, main,
++                                   [BOOST_DATE_TIME_LIB="-l$ax_lib"; AC_SUBST(BOOST_DATE_TIME_LIB) link_date_time="yes"; break],
++                                   [link_date_time="no"])
++                  done
++
++            fi
++            if test "x$ax_lib" = "x"; then
++                AC_MSG_ERROR(Could not find a version of the library!)
++            fi
++			if test "x$link_date_time" != "xyes"; then
++				AC_MSG_ERROR(Could not link against $ax_lib !)
++			fi
++		fi
++
++		CPPFLAGS="$CPPFLAGS_SAVED"
++	LDFLAGS="$LDFLAGS_SAVED"
++	fi
++])
+\ No newline at end of file
+diff --git a/configure.ac b/configure.ac
+index 0351c6922..56eeb5287 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -664,6 +664,7 @@ AX_BOOST_FILESYSTEM
+ AX_BOOST_PROGRAM_OPTIONS
+ AX_BOOST_THREAD
+ AX_BOOST_CHRONO
++AX_BOOST_DATE_TIME
+ 
+ dnl Boost 1.56 through 1.62 allow using std::atomic instead of its own atomic
+ dnl counter implementations. In 1.63 and later the std::atomic approach is default.
+@@ -730,7 +731,7 @@ fi
+ 
+ if test x$use_boost = xyes; then
+ 
+-BOOST_LIBS="$BOOST_LDFLAGS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB $BOOST_PROGRAM_OPTIONS_LIB $BOOST_THREAD_LIB $BOOST_CHRONO_LIB"
++BOOST_LIBS="$BOOST_LDFLAGS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB $BOOST_PROGRAM_OPTIONS_LIB $BOOST_THREAD_LIB $BOOST_CHRONO_LIB $BOOST_DATE_TIME_LIB"
+ 
+ 
+ dnl If boost (prior to 1.57) was built without c++11, it emulated scoped enums
+diff --git a/src/Makefile.test.include b/src/Makefile.test.include
+index 609938c7d..4dfb0308f 100644
+--- a/src/Makefile.test.include
++++ b/src/Makefile.test.include
+@@ -91,7 +91,7 @@ test_test_monetaryunit_LDADD += $(LIBBITCOIN_WALLET)
+ endif
+ test_test_bitcoin_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+ 
+-test_test_monetaryunit_LDADD += $(LIBBITCOIN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
++test_test_monetaryunit_LDADD += $(LIBBITCOIN_CONSENSUS) $(BOOST_DATE_TIME_LIB) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
+ test_test_monetaryunit_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
+ 
+ if ENABLE_ZMQ
