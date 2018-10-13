@@ -1,9 +1,11 @@
 Name: monetaryunit-wallet
-Version: 1.0.3.2
+Version: 2.0.2
 Release: 1
 %undefine _disable_source_fetch
-Source: https://github.com/muecoin/MUECore/archive/v%{version}.tar.gz
-%define     SHA256SUM0 b1b392688e9036f7bd5be935f386311af6131738a2a52a2681db943ad889ba7c
+Source: https://github.com/muecoin/MUE/archive/v%{version}.tar.gz
+%define     SHA256SUM0 c525dc89f76a8836c031bb7ef05bbcdfdb72feef1930a292eaaddea31037b18d
+# https://github.com/PIVX-Project/PIVX/issues/601
+Patch0: pivx_issue_601.patch
 License: MIT
 Summary: Monetary Unit (MUE) wallet
 Group: Applications/System
@@ -17,6 +19,7 @@ BuildRequires: protobuf-devel
 BuildRequires: qrencode-devel
 BuildRequires: qt5-qtbase-devel
 BuildRequires: qt5-qttools-devel
+BuildRequires: which
 BuildRequires: zeromq-devel
 
 %description
@@ -24,6 +27,7 @@ This package provides the Monetary Unit (MUE) wallet with CLI.
 MUE is a decentralised, self-sustainable and self-governed cryptocurrency
 project with long term goals.
 
+%global debug_package %{nil}
 
 # subpackage monetaryunit-wallet-qt5
 %package qt5
@@ -38,30 +42,21 @@ project with long term goals.
 %prep
 echo "%SHA256SUM0 %SOURCE0" | sha256sum -c -
 
-%setup -n MUECore-%{version}
+%setup -n MUE-%{version}
+%patch0 -p1
 
 %build
 ./autogen.sh
-./configure --prefix=/usr --with-gui=qt5
+./configure --prefix=/usr --with-gui=qt5 BDB_FLAGS="-I /usr/include/libdb4" CFLAGS="-I /usr/include/libdb4" CPPFLAGS="-I /usr/include/libdb4" CXXFLAGS="-I /usr/include/libdb4"
 make
 
 %install
 %make_install
-rm %{buildroot}/usr/lib/libbitcoinconsensus.a
-rm %{buildroot}/usr/lib/libbitcoinconsensus.la
 
 %files
-/usr/bin/bench_mue
-/usr/bin/mue-cli
-/usr/bin/mue-tx
-/usr/bin/mued
-/usr/bin/test_mue
-/usr/include/bitcoinconsensus.h
-/usr/lib/libbitcoinconsensus.so
-/usr/lib/libbitcoinconsensus.so.0
-/usr/lib/libbitcoinconsensus.so.0.0.0
-/usr/lib/pkgconfig/libbitcoinconsensus.pc
+/usr/bin/monetaryunit-cli
+/usr/bin/monetaryunit-tx
+/usr/bin/monetaryunitd
 
 %files qt5
-/usr/bin/mue-qt
-/usr/bin/test_mue-qt
+/usr/bin/monetaryunit-qt
