@@ -39,4 +39,4 @@ dnf install monetaryunit-wallet-1.0.3.2-1.x86_64.rpm monetaryunit-wallet-qt5-1.0
 ```
 
 # Donations
-My MUE address is ~~7obzc8c7GYfNuFotKNBoKtricCwP25XEk6. Feel free to send some over, or not, it's entirely up to you!~~ under construction.
+My MUE address is 7oEBoYVer3wCE3XqocXhWvNuHnLJFrY2fW. Feel free to send some over, or not, it's entirely up to you!
