@@ -40,7 +40,7 @@ dnf install monetaryunit-wallet-2.0.2-1.x86_64.rpm monetaryunit-wallet-qt5-2.0.2
 
 ## Raspbian (Stretch) / `armhf` / Raspberry Pi 2 and up
 ```
-dpkg -i monetaryunit-wallet_2.0.2_amd64.deb monetaryunit-wallet-qt5_2.0.2_amd64.deb
+dpkg -i monetaryunit-wallet_2.0.2_armhf.deb monetaryunit-wallet-qt5_2.0.2_armhf.deb
 apt -f install
 ```
 
