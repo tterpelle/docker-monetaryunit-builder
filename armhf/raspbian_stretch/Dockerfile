@@ -22,11 +22,11 @@ RUN mkdir -p /tmp/monetaryunit-daemon/usr/bin && \
   # PKG monetaryunit-qt5
     mv monetaryunit-qt /tmp/monetaryunit-qt5/usr/bin/
 
-COPY monetaryunit-daemon.control /tmp/monetaryunit-daemon/DEBIAN/control
-COPY monetaryunit-qt5.control /tmp/monetaryunit-qt5/DEBIAN/control
+COPY monetaryunit-wallet.control /tmp/monetaryunit-wallet/DEBIAN/control
+COPY monetaryunit-wallet-qt5.control /tmp/monetaryunit-wallet-qt5/DEBIAN/control
 
-RUN dpkg-deb --build /tmp/monetaryunit-daemon monetaryunit-daemon_${VERSION}_${ARCH}.deb && \
-    dpkg-deb --build /tmp/monetaryunit-qt5 monetaryunit-qt5_${VERSION}_${ARCH}.deb
+RUN dpkg-deb --build /tmp/monetaryunit-wallet monetaryunit-wallet_${VERSION}_${ARCH}.deb && \
+    dpkg-deb --build /tmp/monetaryunit-wallet-qt5 monetaryunit-wallet-qt5_${VERSION}_${ARCH}.deb
 
 COPY copy_packages.sh /
 
