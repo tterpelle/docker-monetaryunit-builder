@@ -1,11 +1,11 @@
 #!/bin/bash
 
-DISTRO="fedora26"
-PKGEXT="rpm"
+DISTRO="ubuntu1804"
+PKGEXT="deb"
 
 mkdir -p /packages/${DISTRO} && echo "created /packages/${DISTRO}" || echo "failed to create created /packages/${DISTRO}"
 
-if [ -d "/packages/${DISTRO}" ]
+if [ -d /packages/${DISTRO} ]
 then
   mv $DISTRO_DIR/*.${PKGEXT} /packages/${DISTRO} && echo "moved *.${PKGEXT} to /packages/${DISTRO}" || echo "failed to move *.${PKGEXT} to /packages/${DISTRO}"
 fi

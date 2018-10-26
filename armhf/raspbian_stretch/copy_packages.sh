@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DISTRO="ubuntu1704"
+DISTRO="raspbian9"
 PKGEXT="deb"
 
 mkdir -p /packages/${DISTRO} && echo "created /packages/${DISTRO}" || echo "failed to create created /packages/${DISTRO}"

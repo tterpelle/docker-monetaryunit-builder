@@ -26,17 +26,26 @@ The build fails with `boost-1.66` and `boost-libs-1.66` packages. If you revert 
 ## CentOS / Red Hat Enterprise Linux 7
 Make sure you install the `epel-release` package first. After that you can install the MUE wallet with
 ```
-yum localinstall monetaryunit-wallet-1.0.3.2-1.x86_64.rpm monetaryunit-wallet-qt5-1.0.3.2-1.x86_64.rpm
+yum localinstall monetaryunit-wallet-2.0.2-1.x86_64.rpm monetaryunit-wallet-qt5-2.0.2-1.x86_64.rpm
 ```
-## Debian 9
+## Debian / Ubuntu
 ```
-dpkg -i monetaryunit-wallet_1.0.3.2_amd64.deb monetaryunit-wallet-qt5_1.0.3.2_amd64.deb
+dpkg -i monetaryunit-wallet_2.0.2_amd64.deb monetaryunit-wallet-qt5_2.0.2_amd64.deb
 apt -f install
 ```
-## Fedora 25 / 26 / 27
+## Fedora 27
 ```
-dnf install monetaryunit-wallet-1.0.3.2-1.x86_64.rpm monetaryunit-wallet-qt5-1.0.3.2-1.x86_64.rpm
+dnf install monetaryunit-wallet-2.0.2-1.x86_64.rpm monetaryunit-wallet-qt5-2.0.2-1.x86_64.rpm
 ```
+
+## Raspbian (Stretch) / `armhf` / Raspberry Pi 2 and up
+```
+dpkg -i monetaryunit-wallet_2.0.2_armhf.deb monetaryunit-wallet-qt5_2.0.2_armhf.deb
+apt -f install
+```
+
+Note: these packages haven't been compiled from source. They are created from the binary release [mon-arm-linux-gnueabihf.tar.gz](https://github.com/muecoin/MUE/releases/tag/v2.0.2) by the Monetary Unit team.
+
 
 # Donations
 My MUE address is 7oEBoYVer3wCE3XqocXhWvNuHnLJFrY2fW. Feel free to send some over, or not, it's entirely up to you!

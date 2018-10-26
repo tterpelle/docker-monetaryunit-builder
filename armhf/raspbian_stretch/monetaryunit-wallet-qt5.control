@@ -1,0 +1,13 @@
+Package: monetaryunit-qt5
+Version: 2.0.2-1
+Section: base
+Priority: optional
+Architecture: armhf
+Depends: libbsd0, libc6, libexpat1, libfontconfig1, libfreetype6, libgcc1, libpng16-16, libx11-6, libx11-xcb1, libxau6, libxcb1, libxdmcp6, zlib1g, monetaryunit-daemon
+Maintainer: Tristan Terpelle <tristan+mue@terpelle.be>
+Description: Monetary Unit (MUE) QT5 interface
+ This package provides the Monetary Unit (MUE) QT5 interface to communicate
+ with the MUE wallet (monetaryunit-daemon).
+ MUE is a decentralised, self-sustainable and self-governed cryptocurrency
+ project with long term goals.
+
