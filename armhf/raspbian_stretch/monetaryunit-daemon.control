@@ -1,0 +1,12 @@
+Package: monetaryunit-daemon
+Version: 2.0.2-1
+Section: base
+Priority: optional
+Architecture: armhf
+Depends: libc6, libgcc1
+Maintainer: Tristan Terpelle <tristan+mue@terpelle.be>
+Suggests: monetaryunit-qt5
+Description: Monetary Unit (MUE) wallet (CLI)
+ This package provides the Monetary Unit (MU) wallet and CLI tools.
+ MUE is a decentralised, self-sustainable and self-governed cryptocurrency
+ project with long term goals.
